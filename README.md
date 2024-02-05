@@ -207,3 +207,92 @@ fn main() {
 ```
 
 Feel free to explore more of Rust's powerful features as you continue your learning journey! Happy coding!
+
+# Practice Project
+
+This simple Rust project is designed for beginners to practice various language features. The program:
+
+1. **User Input:**
+   - Receives the user's name and age through standard input.
+
+2. **Structs:**
+   - Defines a `Person` struct to represent user data, including name and age.
+
+3. **Basic Math Operations:**
+   - Performs basic mathematical operations (sum, product, and square) on the user's age.
+
+4. **Arrays:**
+   - Stores the results of the mathematical operations in an array.
+
+5. **File I/O:**
+   - Writes both user information and operation results to a file named `output.txt`.
+
+6. **Functions:**
+   - Utilizes functions to modularize code for better organization and readability.
+
+This project covers key Rust concepts such as user input, structs, basic operations, arrays, file I/O, and functions. It serves as a practical hands-on exercise for those learning Rust programming.
+
+```rust
+use std::io;
+use std::fs::File;
+use std::io::prelude::*;
+
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    println!("Enter your name:");
+    let mut name = String::new();
+    io::stdin().read_line(&mut name).expect("Failed to read the name");
+
+    println!("Enter your age:");
+    let mut age_input = String::new();
+    io::stdin().read_line(&mut age_input).expect("Failed to read the age");
+    let age: u8 = match age_input.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Invalid age. Using 0 as default.");
+            0
+        }
+    };
+
+    let user = Person { name: name.clone(), age };
+
+    let result_array = perform_operations(age);
+
+    welcome_message(&user);
+
+    write_to_file(&user, &result_array);
+}
+
+fn welcome_message(person: &Person) {
+    println!("Welcome, {}! You are {} years old.", person.name.trim(), person.age);
+}
+
+fn perform_operations(age: u8) -> Vec<u8> {
+    let sum = age + 5;
+    let product = age * 2;
+    let square = age.pow(2) as u8;
+
+    println!("Age + 5: {}", sum);
+    println!("Age * 2: {}", product);
+    println!("Age squared: {}", square);
+
+    vec![sum, product, square]
+}
+
+fn write_to_file(person: &Person, results: &Vec<u8>) {
+    let mut file = File::create("output.txt").expect("Failed to create the file");
+
+    write!(file, "Name: {}\nAge: {}\n\n", person.name.trim(), person.age).expect("Failed to write to the file");
+
+    write!(file, "Results:\n").expect("Failed to write to the file");
+    for (index, result) in results.iter().enumerate() {
+        write!(file, "Operation {}: {}\n", index + 1, result).expect("Failed to write to the file");
+    }
+
+    println!("The information has been written to the 'output.txt' file.");
+}
+```
